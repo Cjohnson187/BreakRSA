@@ -6,14 +6,14 @@ public class GCD
   private static BigInteger zero = new BigInteger("0");
   private static BigInteger one = new BigInteger("1");
 
-  public static void main(String[] args)
+  public static BigInteger[][] main(String[] args, BigInteger f, BigInteger e)
   {
     Scanner keys = new Scanner( System.in );
     System.out.println("This program will find the GCD of two positive integers");
-    System.out.println("Enter f---the larger of the two integers:\n");
-    BigInteger f = new BigInteger( keys.nextLine() );
-    System.out.println("\nEnter e---the smaller of the two integers:\n");
-    BigInteger e = new BigInteger( keys.nextLine() );
+    //System.out.println("Enter f---the larger of the two integers:\n");
+    //BigInteger f = new BigInteger( keys.nextLine() );
+    //System.out.println("\nEnter e---the smaller of the two integers:\n");
+    //BigInteger e = new BigInteger( keys.nextLine() );
 
     BigInteger[][] table = new BigInteger[100][6];
 
@@ -59,6 +59,8 @@ public class GCD
                                                  table[r][2], table[r][3],
                                                  table[r][4], table[r][5] );
     } 
+
+    return table;
 
   }
 }
