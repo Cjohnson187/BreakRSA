@@ -45,12 +45,12 @@ public class Break_RSA {
         BigInteger sqN = nE.sqrt();
         BigInteger sqNtemp = sqN.subtract(BigInteger.ONE);
 
-        System.out.println(eE.compareTo(BigInteger.ZERO));
-        System.out.println("sqnTemp -- " + sqNtemp);
+        //System.out.println(eE.compareTo(BigInteger.ZERO));
+        //System.out.println("sqnTemp -- " + sqNtemp);
 
         // get p
         while (sqNtemp.compareTo(BigInteger.ZERO) >= 1){
-            System.out.println("sqnTemp -- " + sqNtemp + " n%sqnTemp -- " + nE.mod(sqNtemp));
+            //System.out.println("sqnTemp -- " + sqNtemp + " n%sqnTemp -- " + nE.mod(sqNtemp));
             if (nE.mod(sqNtemp).compareTo(BigInteger.ZERO) == 0) {
                 p = sqNtemp;
                 break;
@@ -60,38 +60,45 @@ public class Break_RSA {
 
         // q = n/p
         BigInteger q = nE.divide(p);
-        System.out.println(q + "good q");
+        //System.out.println(q + "good q");
 
         //get theta
         // theta = (p-1)+(q-1)
         theta = ( (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE)) );
-        System.out.println("theta = " + theta );
+        //System.out.println("theta = " + theta );
 
         BigInteger[][] table = getTable(theta, eE);
-        System.out.println("t = " + table[0][5]);
+        //System.out.println("t = " + table[0][5]);
 
 
 
         BigInteger binEC = new BigInteger("0");
         String binE = eE.toString(2);
-        char one = 1;
-        System.out.println("binE"+binE+"length = " + binE.length());
+        char one = '1';
+        //System.out.println("binE"+binE+"length = " + binE.length());
 
+
+
+        BigInteger modded = modExp(cE, table[0][5], nE, false);
+        System.out.println("modded = " + modded);
+        //System.out.println("37 = " + eE.toString(2));
+
+
+                // this is to check for correct a found from c
         for(int i=0; i < binE.length(); i++) {
-            System.out.println("char at - " + binE.charAt(i));
-            System.out.println(Character.compare(binE.charAt(i), one).getClass.getName() + "  at i - " + i);
-            if (Character.compare(binE.charAt(i), one) == 47) {
-                BigInteger exponent = new BigInteger(String.valueOf(i));
-                binEC.add(BigInteger.TWO.pow(i));
-                System.out.println("binEC length = "+binE.length()+  "binEC = " + binEC);
+            //System.out.println("char at - " + binE.charAt(i));
+            System.out.println(Character.compare(binE.charAt(i), one) + "  at i - " + i + "current char = " + binE.charAt(i));
+            if (Character.compare(binE.charAt(i), one) == 0) {
+                //BigInteger exponent = new BigInteger(String.valueOf(i));
+                System.out.println("^i = " + BigInteger.TWO.pow(i).getClass() );
+                binEC = binEC.add(modExp(new BigInteger("1173"), theta, nE, false)); // c, theta, n
+                System.out.println(binEC);
+                //System.out.println("binEC length = "+binE.length()+  "binEC = " + binEC);
             
             }
         }
         System.out.println("binEC finished == " + binEC);
 
-        BigInteger modded = modExp(cE, table[0][5], nE, true);
-        System.out.println("modded = " + modded);
-        System.out.println("37 = " + eE.toString(2));
 
 
 
@@ -103,7 +110,7 @@ public class Break_RSA {
     public static BigInteger[][] getTable( BigInteger f, BigInteger e)
     {
       Scanner keys = new Scanner( System.in );
-      System.out.println("This program will find the GCD of two positive integers");
+      //System.out.println("This program will find the GCD of two positive integers");
       //System.out.println("Enter f---the larger of the two integers:\n");
       //BigInteger f = new BigInteger( keys.nextLine() );
       //System.out.println("\nEnter e---the smaller of the two integers:\n");
