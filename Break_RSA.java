@@ -9,16 +9,11 @@ public class Break_RSA {
     Project 4 Breaking RSA
     */
 
+    private static final BigInteger hundred = new BigInteger("100");
 
-    // smaller example for testing
-    private static final BigInteger n = new BigInteger("2501");
-    private static final BigInteger e = new BigInteger("37");
-    private static final BigInteger message = new BigInteger("1173");  // c
-
-
-    //private static final BigInteger n = new BigInteger("1029059010426758802790503300595323911");
-    //private static final BigInteger e = new BigInteger("2287529");
-    //private static final BigInteger message = new BigInteger("1027795314451781443748475386257882516");  // c
+    private static final BigInteger n = new BigInteger("1029059010426758802790503300595323911");
+    private static final BigInteger e = new BigInteger("2287529");
+    private static final BigInteger message = new BigInteger("1027795314451781443748475386257882516");  // c
     // original message is a
 
     public static void main(String[] args) {
@@ -26,50 +21,21 @@ public class Break_RSA {
         // initializing variables
         BigInteger p = new BigInteger ("0");
         BigInteger theta = new BigInteger("0");
-        BigInteger t = new BigInteger("0");
 
-        // in phase 1
-        // change square root of n to negative
-        BigInteger sqN = n.sqrt();
-        BigInteger oddOrEven = sqN.mod(BigInteger.TWO);
-        if (oddOrEven.compareTo(BigInteger.ZERO) == 0) {
-            sqN = sqN.subtract(BigInteger.ONE);
-        }
-        System.out.println("square root of n :  " + sqN + "\nfinished phase 1" );
+        //from wolfram- greatest prime factor(n), p = larger of the two returned
+        p = new BigInteger("4758131272895389067293");
 
-        // phase 2
-        // getting p
-        while (sqN.compareTo(BigInteger.ZERO) >= 1){
-            if (n.mod(sqN).compareTo(BigInteger.ZERO) == 0) {
-                p = sqN;
-                break;
-            }
-            sqN = sqN.subtract(BigInteger.TWO);
-        }
-        System.out.println("getting gcd of square root of new n :  " + sqN + "\nfinished phase 2" );
-
-        // phase 3
         // getting q  (q = n/p)
         BigInteger q = n.divide(p);
-        System.out.println("getting q :  " + q + "\nfinished phase 3" );
 
-        // phase 4
         //get theta -- theta = (p-1)+(q-1)
         theta = ( (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE)) );
-        System.out.println("getting theta :  " + sqN + "\nfinished phase 4" );
 
-        // phase 5
-        // building table
+        // building table from schultz program "getTable"(theta, e)
         BigInteger[][] table = getTable(theta, e);
-        System.out.println("getting table :  " + sqN + "\nfinished phase 5" );
-
-        // phase 5
         BigInteger a = modExp(message, table[0][5], n, false);
-        System.out.println("a = " + a + "\nfinished phase 5");
+        System.out.println("decrypted message a = " + a);
 
-
-        // phase 6
-        System.out.println("in phase 6");
 
         // this is to check for correct a found from c
         BigInteger binEC = new BigInteger("0");
@@ -83,10 +49,6 @@ public class Break_RSA {
                 binVal.add(  modExp(a, BigInteger.TWO.pow(i), n, false)  ); // c, i, n
             }
         }
-        System.out.println("finished phase 6");
-
-        // phase 7
-        System.out.println("starting phase 7");
 
         BigInteger newC = new BigInteger("1");
         for (BigInteger bigInteger : binVal) {
@@ -99,8 +61,12 @@ public class Break_RSA {
             System.out.println("decrypted correctly, the original message is a=  " + a);
         }
 
+        // decode with schultz program decode
+        decode(a);
+
     }
 
+    // from schultz
     public static BigInteger[][] getTable( BigInteger f, BigInteger e)
     {
       Scanner keys = new Scanner( System.in );
@@ -135,8 +101,8 @@ public class Break_RSA {
       }
       return table;
     }
- 
-    
+
+    // from schultz
     public static BigInteger modExp( BigInteger a, BigInteger e, BigInteger n,boolean showTrace ){
         BigInteger squares = a;
         BigInteger exp = e;
@@ -157,4 +123,20 @@ public class Break_RSA {
         }
         return prod;
     }
+
+    // from schultz
+    public static void decode(BigInteger a) {
+        System.out.print("Decoding a \n");
+
+        String s = "";
+        while( a.compareTo( BigInteger.ZERO ) > 0 ) {
+            int sym = a.mod( hundred ).intValue();
+            a = a.divide( hundred );
+            s = ""+(char)(sym+31) + s;
+        }
+
+        System.out.println("The decoded message is:\n" + s );
+    }
+
 }
+
